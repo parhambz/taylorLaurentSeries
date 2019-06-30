@@ -55,7 +55,7 @@ def seprate(soorat,roots):
     for i in range(0,len(tempRes)):
         s=P.poly1d([tempRes[i]])
         m=P.poly1d([complex(1,0),-roots[i]])
-        k=s/m
+        k=[s,roots[i]]
         res+=[k]
     return res
 zeroCount=0
