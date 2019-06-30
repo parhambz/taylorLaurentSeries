@@ -41,24 +41,22 @@ def removeZero(makhraj,roots):
             makhraj=makhraj[0]
             roots = roots[:counter] + roots[counter + 1:]
             zeroCount+=-1
-            flag=0
         counter+=1
     return [makhraj,roots]
 def seprate(soorat,roots):
     tempRes=[]
     for i in roots:
-        temp=P.poly1d([complex(1,1)])
+        temp=P.poly1d([complex(1,0)])
         for j in roots:
             if not i==j:
-                print(i,"i j",j)
-                temp=temp*P.poly1d([complex(1,0),roots[j]])
+                temp=temp*P.poly1d([complex(1,0),-j])
         tempRes+=[P.polyval(soorat,i)/P.polyval(temp,i)]
     res=[]
     for i in range(0,len(tempRes)):
-        print(tempRes[i])
-        s=P.poly1d([complex(tempRes[i],0)])
+        s=P.poly1d([tempRes[i]])
         m=P.poly1d([complex(1,0),-roots[i]])
-        res+=[P.polydiv(s,m)]
+        k=s/m
+        res+=[k]
     return res
 zeroCount=0
 soorat=getQ()
@@ -77,13 +75,14 @@ roots=simpleRes[1]
 
 
 divRes=P.polydiv(soorat,makhraj)
-kharejghesmat=divRes[1]
-soorat=divRes[0]
+kharejghesmat=divRes[0]
+soorat=divRes[1]
 
 print("soorat : \n",soorat)
 print("makhraj :\n",makhraj)
 print("kharej ghesmat :\n",kharejghesmat)
-
-seprated=seprate(soorat,makhraj)
-print(seprated)
+print("roots :\n",roots)
+seprated=seprate(soorat,roots)
+for i in seprated:
+    print(i)
 
