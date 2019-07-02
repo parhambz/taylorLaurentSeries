@@ -1,4 +1,5 @@
 import numpy.lib.polynomial as P
+import math
 def getQ():
     res=[]
     n=int(input("soorat"))
@@ -40,7 +41,7 @@ def removeZero(makhraj,roots):
             makhraj = P.polydiv(makhraj, P.poly1d([complex(1, 0), 0]))
             makhraj=makhraj[0]
             roots = roots[:counter] + roots[counter + 1:]
-            zeroCount+=-1
+            zeroCount+=1
         counter+=1
     return [makhraj,roots]
 def seprate(soorat,roots):
@@ -53,11 +54,78 @@ def seprate(soorat,roots):
         tempRes+=[P.polyval(soorat,i)/P.polyval(temp,i)]
     res=[]
     for i in range(0,len(tempRes)):
-        s=P.poly1d([tempRes[i]])
+        s=tempRes[i]
         m=P.poly1d([complex(1,0),-roots[i]])
         k=[s,roots[i]]
         res+=[k]
     return res
+def taylor(a,root,n):
+    res=[[0,1] for i in range (n)]
+    for i in range(0,len(res)):
+        for j in range(0,i):
+            res[i][0]+=1
+            res[i][1]=res[i][1]/root
+    for i in range(0,len(res)):
+        res[i][1]=res[i][1]*a/root*(-1)
+    return res
+def laurent(a,root,n):
+    res = [[0,1] for i in range(n)]
+    for i in range(0, len(res)):
+        for j in range(0, i):
+            res[i][0]+=-1
+            res[i][1]*=root
+        res[i][0]+=-1
+        res[i][1]*=a
+    return res
+def sum(xs,ys):
+    if len(xs)<len(ys):
+        xs,ys=ys,xs
+    for i in range(0,len(xs)):
+        for j in range(0,len(ys)):
+            if xs[i][0]==ys[j][0]:
+                xs[i][1]+=ys[j][1]
+                ys[j][1]=0
+    for j in range(0, len(ys)):
+        if not ys[j][1] == 0:
+            xs+=[ys[j]]
+    return xs
+def mul(xs,ys):
+    for i in range(0,len(xs)):
+        xs[i][0]+=ys[0]
+        xs[i][1]*=ys[1]
+    return xs
+def poly1dToArr(p):
+    ks=p.c
+    res=[]
+    for i in range(0,len(ks)):
+        power=len(ks)-i-1
+        res+=[[power,ks[i]]]
+    return res
+def giveR(i):
+    r = i.real * i.real + i.imag * i.imag
+    r = r ** (1 / 2)
+    return r
+def write(root,seprated,zeroCount,kharejghesmat,n):
+    r=giveR(root)
+    res=[]
+    for i in seprated:
+        if giveR(i[1])<r:
+            res = sum(res, laurent(i[0], i[1], n))
+        else:
+            res = sum(res,taylor (i[0], i[1], n))
+    res=sum(res,poly1dToArr(kharejghesmat))
+    res=mul(res,[-zeroCount,1])
+    return res
+def deffR(seprated,zeroCount,kharejghesmat,roots,n):
+    for i in range(0,len(roots)):
+        roots[i]=abs(roots[i])
+    roots.sort()
+    roots=roots+[math.inf]
+    for i in range(0,len(roots)):
+        series=write(roots[i],seprated,zeroCount,kharejghesmat,n)
+        print("for r<",roots[i],":\n",series)
+n=5
+
 zeroCount=0
 soorat=getQ()
 roots=getD()
@@ -78,11 +146,6 @@ divRes=P.polydiv(soorat,makhraj)
 kharejghesmat=divRes[0]
 soorat=divRes[1]
 
-print("soorat : \n",soorat)
-print("makhraj :\n",makhraj)
-print("kharej ghesmat :\n",kharejghesmat)
-print("roots :\n",roots)
-seprated=seprate(soorat,roots)
-for i in seprated:
-    print(i)
 
+seprated=seprate(soorat,roots)
+deffR(seprated,zeroCount,kharejghesmat,roots,n)
