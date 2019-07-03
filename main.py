@@ -35,7 +35,7 @@ def getD():
 
 
 def simplize(numberator, denominator, roots):
-    # simplize the numberator and Denominator
+    # simplizes the numberator and Denominator
     counter = 0
     for i in roots:
         if P.polyval(numberator, i) == 0:
@@ -63,7 +63,7 @@ def removeZero(denominator, roots):
 
 
 def seprate(numberator, roots):
-    # seprate a fraction
+    # seprates a fraction
     tempRes = []
     for i in roots:
         temp = P.poly1d([complex(1, 0)])
@@ -120,7 +120,7 @@ def sum(xs, ys):
 
 
 def mul(xs, ys):
-    # mul 2 series xs=[[power,Coefficient],[p2,c2]]
+    # multiplys 2 series xs=[[power,Coefficient],[p2,c2]]
     for i in range(0, len(xs)):
         xs[i][0] += ys[0]
         xs[i][1] *= ys[1]
@@ -128,7 +128,7 @@ def mul(xs, ys):
 
 
 def poly1dToArr(p):
-    # create xs=[[power,Coefficient],[p2,c2]] from polynomial
+    # creates xs=[[power,Coefficient],[p2,c2]] from polynomial
     ks = p.c
     res = []
     for i in range(0, len(ks)):
