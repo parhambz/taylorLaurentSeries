@@ -1,2 +1,2 @@
-# taylorLaurantSeries
-implemention of laurant and taylor series using python
+# taylorLaurentSeries
+implemention of laurent and taylor series using python
